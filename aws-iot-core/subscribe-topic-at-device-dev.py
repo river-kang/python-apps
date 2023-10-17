@@ -9,7 +9,6 @@ def build_direct_mqtt_connection(endpoint,
                                  port,
                                  cert_filepath,
                                  pri_key_filepath,
-                                 ca_filepath,
                                  on_connection_interrupted_callback,
                                  on_connection_resumed_callback,
                                  client_id):
@@ -63,7 +62,7 @@ def subscribe_aws_iot_core_topic():
         port=8883,
         cert_filepath='cert.pem',
         pri_key_filepath='priv.key',
-        ca_filepath='AmazonRootCA1.pem',
+        # ca_filepath='AmazonRootCAChain.pem',
         on_connection_interrupted_callback=on_connection_interrupted,
         on_connection_resumed_callback=on_connection_resumed,
         client_id='my-test-client'
