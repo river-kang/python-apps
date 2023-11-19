@@ -40,7 +40,7 @@ project_id = "en-data-mart-dev-id-0128"
 
 # subscription_name = "residual-check-subscription"
 # subscription_name = "rtu-v1-connection-status-sub-default"
-subscription_name = "eims-usage-sub"
+subscription_name = "inverter-tagged-data-test-sub"
 
 if __name__ == "__main__":
     with pubsub_v1.SubscriberClient() as subscriber:
