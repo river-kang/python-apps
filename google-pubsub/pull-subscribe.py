@@ -38,9 +38,9 @@ def residual_check_subscription_callback(message: pubsub_v1.subscriber.message.M
 
 project_id = "en-data-mart-dev-id-0128"
 
-# subscription_name = "residual-check-subscription"
+subscription_name = "rtu-fw-ota-manager-ota_segment_req_topic"
 # subscription_name = "rtu-v1-connection-status-sub-default"
-subscription_name = "inverter-tagged-data-test-sub"
+# subscription_name = "inverter-tagged-data-test-sub"
 
 if __name__ == "__main__":
     with pubsub_v1.SubscriberClient() as subscriber:
