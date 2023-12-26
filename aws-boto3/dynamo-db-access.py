@@ -9,7 +9,7 @@ table_name = 'ems_site_data'
 table = dynamodb.Table(table_name)
 
 # Specify the site_id you want to query
-site_id_value = 1
+site_id_value = 9
 
 # Query the table
 response = table.query(
