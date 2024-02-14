@@ -1,5 +1,4 @@
-import json
-
+import time
 import geopy.geocoders
 from geopy.geocoders import GoogleV3
 import certifi
@@ -12,8 +11,8 @@ import shapely
 
 # Step. 파일에서 정보를 읽어와 기본 정보를 생성.
 year = 2023
-# input_file_path = 'files/2023_pv_developer_origin.txt'
-input_file_path = 'files/2023_pv_developer_origin_sample.txt'
+input_file_path = 'files/2023_pv_developer_origin.txt'
+# input_file_path = 'files/2023_pv_developer_origin_sample.txt'
 developer_list = []
 
 with open(input_file_path, 'r') as file:
@@ -46,19 +45,21 @@ with open('google_develop.key', 'r') as file:
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 geopy.geocoders.options.default_ssl_context = ctx
-geocoder = GoogleV3(api_key=api_key)
+geocoder = GoogleV3(api_key=api_key, user_agent='mimi')
 
 for item in developer_list:
-    locCoord = geocoder.geocode(item["address"])
-    shapelyPoint = shapely.geometry.Point(locCoord.latitude, locCoord.longitude)
+    if item["address"] != '':
+        locCoord = geocoder.geocode(item["address"])
 
-    item['locCoords'] = shapely.to_wkt(shapelyPoint)
+        # schema: 'year,name,gwangyeok,biz_reg_num,president,address,latitude,longitude,note,total_capa,total_prj_num,relation'
+        print(f'''{item['year']},{item['name']},{item['gwangyeok']},{item['biz_reg_num']},{item['president']},''' +
+              f'''{item['address']},{locCoord.latitude},{locCoord.longitude},{item['note']},{item['total_capa']},{item['total_prj_num']},''' +
+              f'''{item['relation']}''')
+        time.sleep(0.1)
+    else:
+        print(f'''{item['year']},{item['name']},{item['gwangyeok']},{item['biz_reg_num']},{item['president']},''' +
+              f'''{item['address']},37.5145741,127.1027673,{item['note']},{item['total_capa']},{item['total_prj_num']},''' +
+              f'''{item['relation']}''')
 
-    # schema: 'year,name,gwangyeok,biz_reg_num,president,address,locCoords,note,total_capa,total_prj_num,relation'
-    print(f'''{item['year']},{item['name']},{item['gwangyeok']},{item['biz_reg_num']},{item['president']},''' +
-          f'''{item['address']},{item['locCoords']},{item['note']},{item['total_capa']},{item['total_prj_num']},''' +
-          f'''{item['relation']}''')
-
-    print(json.dumps(obj=item, ensure_ascii=False))
 
 # import 를 위해 Google storage bucket 에 업로드
