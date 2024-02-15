@@ -30,7 +30,6 @@ with open(addr_coord_file, 'r') as file:
 
 # Step. BigQuery upload 용 json output 생성
 project_file_path = 'files/2023_pv_project_origin_cleaned.txt'
-
 with open(project_file_path, 'r') as file:
     line = file.readline()
     while line:
@@ -43,7 +42,9 @@ with open(project_file_path, 'r') as file:
         line = file.readline()
     file.close()
 
-print(addr_coord_dict)
+output_file_path = 'files/2023_pv_project_data.json'
+
+outpuf_file = open(output_file_path, 'w')
 
 with open(project_file_path, 'r') as file:
     line = file.readline()
@@ -68,12 +69,10 @@ with open(project_file_path, 'r') as file:
         }
 
         addr_coord_dict[row[2]]['index'] = addr_coord_dict[row[2]]['index'] + 1
-
-        print(json.dumps(item, ensure_ascii=False))
+        outpuf_file.write(json.dumps(item, ensure_ascii=False) + '\n')
         line = file.readline()
     file.close()
 
-# Step. 각 Element 에 대하여 Google Geocoder 기반으로 위경도 값을 읽어와 추가 후, csv 로 출력
-
+outpuf_file.close()
 
 # import 를 위해 Google storage bucket 에 업로드
