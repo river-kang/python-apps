@@ -20,13 +20,58 @@ with open(addr_coord_file, 'r') as file:
         if row[0] not in addr_coord_dict:
             addr_coord_dict[row[0]] = {
                 'lat': row[1],
-                'lng': row[2]
+                'lng': row[2],
+                'index': 1,
+                'total': 0
             }
 
         line = file.readline()
     file.close()
 
+# Step. BigQuery upload 용 json output 생성
+project_file_path = 'files/2023_pv_project_origin_cleaned.txt'
+
+with open(project_file_path, 'r') as file:
+    line = file.readline()
+    while line:
+        row = line.replace('\n', '').split('\t')
+
+        if row[9] != '':    # 사업장 면적은 사업 부지 별로 대표로 존재하는게 기본이나, 그렇지 못할 경우 'area' 가 존재하지 않음.
+            addr_coord_dict[row[2]]['area'] = re.findall(r'[-+]?[0-9]*\.?[0-9]+', row[9])[0]
+
+        addr_coord_dict[row[2]]['total'] = addr_coord_dict[row[2]]['total'] + 1
+        line = file.readline()
+    file.close()
+
 print(addr_coord_dict)
+
+with open(project_file_path, 'r') as file:
+    line = file.readline()
+    while line:
+        row = line.replace('\n', '').split('\t')
+
+        item = {
+            'env_compl_date': row[3],
+            'gwangyeok': row[0],
+            'gicho': row[1],
+            'gubun': row[2],
+            'index': addr_coord_dict[row[2]]['index'],
+            'latitude': addr_coord_dict[row[2]]['lat'],
+            'longitude': addr_coord_dict[row[2]]['lng'],
+            'biz_owner': row[4],
+            'president': row[5],
+            'location': row[6],
+            'plant_name': row[7],
+            'capacity': row[8],
+            'area_size': addr_coord_dict[row[2]]['area'] if 'area' in addr_coord_dict[row[2]] else None,
+            'developer': row[10]
+        }
+
+        addr_coord_dict[row[2]]['index'] = addr_coord_dict[row[2]]['index'] + 1
+
+        print(json.dumps(item, ensure_ascii=False))
+        line = file.readline()
+    file.close()
 
 # Step. 각 Element 에 대하여 Google Geocoder 기반으로 위경도 값을 읽어와 추가 후, csv 로 출력
 
