@@ -12,7 +12,7 @@ import shapely
 
 # Step. 파일에서 정보를 읽어와 기본 정보를 생성.
 year = 2023
-input_file_path = 'files/2023_pv_project_origin_cleaned.txt'
+input_file_path = 'files/2022_pv_project_origin.txt'
 # input_file_path = 'files/2023_pv_developer_origin_sample.txt'
 address_coord_dict = dict()
 
@@ -39,21 +39,6 @@ with open(input_file_path, 'r') as file:
             time.sleep(0.1)
             print(f'{row[2]},{locCoord.latitude},{locCoord.longitude}')
             address_coord_dict[row[2]] = 'obtained'
-        #
-        # developer = {
-        #     "year": year,
-        #     "name": row[1],
-        #     "gwangyeok": row[0],
-        #     "biz_reg_num": row[2],
-        #     "president": row[3].replace(' ', ''),
-        #     "address": row[4],
-        #     "note": row[5],
-        #     "total_capa": float(re.findall(r'[-+]?[0-9]*\.?[0-9]+', row[6])[0]),
-        #     "total_prj_num": int(re.findall(r'[-+]?[0-9]*\.?[0-9]+', row[8])[0]),
-        #     "relation": row[10] if len(row) == 11 else ''
-        # }
-        #
-        # developer_list.append(developer)
 
         line = file.readline()
     file.close()
